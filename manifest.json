@@ -1,0 +1,22 @@
+{
+    "manifest_version": 2,
+    "name": "Twitter Changer",
+    "version": "1.0",
+    "description": "Restore Twitter's own string, favicon, logo from X.com",
+    "permissions": ["activeTab", "tabs", "storage"],
+    "browser_action": {
+      "default_popup": "popup.html"
+    },
+    "icons": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": ["*://*/*"],
+        "js": ["main.js"]
+      }
+    ]
+  }
+  
