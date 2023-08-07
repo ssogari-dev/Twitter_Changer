@@ -12,7 +12,7 @@ const replaceIcon = () => {
     + '  display: none;'
     + '}'
     + 'h1[role="heading"] div[dir="ltr"] {'
-    + '  background-image: url(' + chrome.runtime.getURL('images/blue.png') + ');'
+    + '  background-image: url(' + chrome.runtime.getURL('source/blue.png') + ');'
     + '  background-size: 28px;'
     + '  background-repeat: no-repeat;'
     + '  background-position: center;'
@@ -21,7 +21,7 @@ const replaceIcon = () => {
     + '  display: none;'
     + '}'
     + 'div[data-testid="TopNavBar"] > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child > div:has(>svg) {'
-    + '  background-image: url(' + chrome.runtime.getURL('images/blue.png') + ');'
+    + '  background-image: url(' + chrome.runtime.getURL('source/blue.png') + ');'
     + '  background-size: 24px;'
     + '  background-repeat: no-repeat;'
     + '  background-position: center;'
@@ -32,20 +32,22 @@ const replaceIcon = () => {
 }
 
 // Favicon 변경
-function changeFaviconHref() {
+function changeFavicon() {
   // 기존 아이콘을 찾음
   const linkElement = document.querySelector('link[rel="shortcut icon"]');
   if (linkElement) {
     // 기존 아이콘을 변경
-    linkElement.setAttribute('href', chrome.runtime.getURL('images/twitter.ico'));
+    // linkElement.setAttribute('href', chrome.runtime.getURL('source/favicon.png')); // 이거 사실 왜 안되는지 잘 모르겠음
+    linkElement.setAttribute('href', '//abs.twimg.com/favicons/twitter.ico'); // Twitter Server에 남겨진 아이콘으로 변경
   }
 }
 
-// Title의 '/ X'를 '/ Twitter'로 변경
+
+// Title의 '/ X'를 '/ 트위터'로 변경
 const replaceTitle =()=> {
   const title = document.querySelector('title');
-  // title이 존재하고, '/ X'가 포함되어 있으면 '/ Twitter'로 변경
-  title && title.text.match(/\/ X/) && (document.querySelector('title').text = title.text.replace(/\/ X$/, '/ Twitter'))
+  // title이 존재하고, '/ X'가 포함되어 있으면 '/ 트위터'로 변경
+  title && title.text.match(/\/ X/) && (document.querySelector('title').text = title.text.replace(/\/ X$/, '/ 트위터'))
 }
 
 // '게시하기'를 '트윗'으로 변경
@@ -53,7 +55,11 @@ const replacePublishButton = () => {
   const replaceText = (element) => {
     if (element) {
       const originalText = element.textContent;
-      const newText = originalText.replace(/게시하기/g, '트윗');
+      let newText = originalText;
+
+      newText = newText.replace(/게시하기/g, '트윗하기');
+      newText = newText.replace('Post your reply!', '답글 트윗하기');
+      
       // 텍스트가 변경되었는지 확인
       if (newText !== originalText) {
         // 변경되었다면 텍스트를 변경
@@ -80,10 +86,19 @@ const replacePublishButton = () => {
   });
 };
 
+const removeElements = () => {
+  const elements = document.querySelectorAll(`[role="complementary"]`);
+  elements.forEach((element) => {
+    element.remove();
+  });
+};
+
+
 // DOM이 로드되면 실행
 window.addEventListener('DOMContentLoaded', ()=>{
   replaceIcon();
-  changeFaviconHref();
+  changeFavicon();
+  removeElements();
 
   // Title이 변경되면 실행
   new MutationObserver(replaceTitle).observe(document.head, {
@@ -99,7 +114,11 @@ window.addEventListener('DOMContentLoaded', ()=>{
       addedNodes.forEach((node) => {
         if (node.nodeType === Node.ELEMENT_NODE) {
           // 특정 요소가 추가되면 실행
-          replacePublishButton(node);
+          // replacePublishButton(node);
+
+          const specificElement = document.querySelector('span.css-901oao.css-16my406.r-poiln3.r-bcqeeo.r-qvutc0');
+          replacePublishButton(specificElement);
+          removeElements();
         }
       });
     });

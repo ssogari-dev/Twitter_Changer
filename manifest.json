@@ -2,7 +2,7 @@
   "name":"Twitter Restore",
   "description":"Restore Twitter's Own Favicon, Logo, String from X.com",
   "icons": {
-    "48": "/images/twitter.ico"
+    "48": "/source/twitter.ico"
   },
   "version":"2.0.11",
   "manifest_version":3,
