@@ -1,35 +1,39 @@
-// 기존 아이콘과 X 아이콘에 대한 정의
-const birdIcon = "M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z";
-const xIcon = "M14.258 10.152L23.176 0h-2.113l-7.747 8.813L7.133 0H0l9.352 13.328L0 23.973h2.113l8.176-9.309 6.531 9.309h7.133zm-2.895 3.293l-.949-1.328L2.875 1.56h3.246l6.086 8.523.945 1.328 7.91 11.078h-3.246zm0 0";
-const xIcon2 = "M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z";
-
-// Header와 Navigation Bar의 Logo를 변경
-const replaceIcon = () => {
-  const style = document.createElement('style');
-  // Header의 Logo를 변경
-  style.textContent
-    = 'h1[role="heading"] svg[viewBox="0 0 24 24"] path {'
-    + '  display: none;'
-    + '}'
-    + 'h1[role="heading"] div[dir="ltr"] {'
-    + '  background-image: url(' + chrome.runtime.getURL('source/blue.png') + ');'
-    + '  background-size: 28px;'
-    + '  background-repeat: no-repeat;'
-    + '  background-position: center;'
-    + '}'
-    + 'div[data-testid="TopNavBar"] > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child > div > svg[viewBox="0 0 24 24"] path {'
-    + '  display: none;'
-    + '}'
-    + 'div[data-testid="TopNavBar"] > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child > div:first-child > div:has(>svg) {'
-    + '  background-image: url(' + chrome.runtime.getURL('source/blue.png') + ');'
-    + '  background-size: 24px;'
-    + '  background-repeat: no-repeat;'
-    + '  background-position: center;'
-    + '}'
-  ;
-  // Navigation Bar의 Logo를 변경
-  document.body.appendChild(style);
+const twitterLogoAttributes = {
+  fillRule: "evenodd",
+  clipRule: "evenodd",
+  d: "M20.4208 0.332767C19.5876 0.852969 18.6669 1.2313 17.6829 1.43373C16.899 0.551344 15.7787 0 14.5385 0C12.1611 0 10.2317 2.03467 10.2317 4.54397C10.2317 4.90039 10.2687 5.24584 10.3427 5.57861C6.76208 5.38887 3.58794 3.58201 1.46175 0.829323C1.09057 1.50293 0.878621 2.28439 0.878621 3.11659C0.878621 4.69219 1.63893 6.08324 2.79566 6.89814C2.0903 6.87623 1.42475 6.66976 0.842736 6.33181V6.38717C0.842736 8.58966 2.32804 10.4271 4.30059 10.8429C3.9395 10.9496 3.55822 11.0032 3.16517 11.0032C2.88762 11.0032 2.6168 10.9756 2.35439 10.9225C2.90276 12.7271 4.49291 14.0414 6.37855 14.0766C4.90447 15.2958 3.04574 16.0224 1.02777 16.0224C0.680132 16.0224 0.336422 16.0017 0 15.9601C1.90639 17.2474 4.17219 18 6.60452 18C14.5301 18 18.8626 11.0771 18.8626 5.07167C18.8626 4.87386 18.8592 4.67662 18.8519 4.48284C19.6936 3.84211 20.4247 3.0422 21 2.13098C20.2285 2.49201 19.3975 2.73654 18.5262 2.84611C19.416 2.28439 20.0989 1.39393 20.4208 0.332767Z"
 }
+
+function appendSVGChild(elementType,target,attributes = {},text = '') {
+  const element = document.createElementNS('http://www.w3.org/2000/svg',elementType);
+  Object.entries(attributes).map(a => element.setAttribute(a[0],a[1]));
+  if (text) {
+    const textNode = document.createTextNode(text);
+    element.appendChild(textNode);
+  }
+  target.appendChild(element);
+  return element;
+};
+
+const updateXToTwitter = () => {
+  let header = document.getElementsByTagName('header')[0];
+  if (!header) console.log('header not found');
+  let xIconSvg = header.getElementsByTagName('svg')[0];
+  if (!xIconSvg) console.log('xIconSvg not found');
+  let xIconPath = xIconSvg.children[0];
+  if (!xIconPath) console.log('xIconPath not found');
+
+  if (xIconSvg && xIconPath) {
+    xIconSvg.setAttribute('viewBox', '0 0 21 18');
+    xIconSvg.style.marginLeft = '4px';
+    xIconSvg.removeChild(xIconPath);
+    appendSVGChild('path', xIconSvg, twitterLogoAttributes);
+  }
+}
+
+setTimeout(updateXToTwitter, 3000);
+
+
 
 // Favicon 변경
 function changeFavicon() {
@@ -87,7 +91,7 @@ const replacePublishButton = () => {
 };
 
 const removeElements = () => {
-  const elements = document.querySelectorAll(`[role="complementary"]`);
+  const elements = document.querySelectorAll(`[aria-label="인증 받기"]`);
   elements.forEach((element) => {
     element.remove();
   });
@@ -96,7 +100,6 @@ const removeElements = () => {
 
 // DOM이 로드되면 실행
 window.addEventListener('DOMContentLoaded', ()=>{
-  replaceIcon();
   changeFavicon();
   removeElements();
 
